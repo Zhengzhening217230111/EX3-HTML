@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Word Scramble Game</title>
+    <style>
+        body {
+            font-family: serif;
+            text-align: center;
+            background-color: #f3f3f3;
+            margin-top: 30px;
+        }
+        #scrambledWord {
+            font-size: 2rem;
+            margin: 20px 0;
+        }
+        #guess {
+            font-size: 1rem;
+            padding: 2px;
+            width: 180px;
+        }
+        button {
+            font-size: 1.2rem;
+            padding: 12px 24px;
+            margin: 15px 8px;
+            background-color: #f0f0f0;
+            border: 1px solid #666;
+            cursor: pointer;
+        }
+        #result {
+            font-size: 1.2rem;
+            margin-top: 20px;
+        }
+        #characterImg {
+            margin: 20px auto;
+            max-width: 300px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Word Scramble Game</h1>
+
+    <div>
+        <p>Try to guess the word!</p>
+        <h2 id="scrambledWord"></h2>
+    </div>
+
+    <div>
+        <input type="text" id="guess" placeholder="Enter your guess here">
+    </div>
+    <br>
+
+    <button id="checkAnswer">Check Answer</button>
+    <button id="newWord">New Word</button>
+
+    <div id="result"></div>
+    <img id="characterImg" alt="Character">
+
+    <script>
+        const words = [
+            { word: "Shinchan", img: "Shinchan.jpg" },
+            { word: "Doraemon", img: "Doraemon.jpg" },
+            { word: "Luffy", img: "Luffy.jpg" },
+            { word: "Pikachu", img: "Pikachu.jpg" },
+            { word: "Saitama", img: "Saitama.jpg" }
+        ];
+        let currentWordObj = {};
+
+        function newWord() {
+            const randomIndex = Math.floor(Math.random() * words.length);
+            currentWordObj = words[randomIndex];
+            document.getElementById("scrambledWord").innerText = scrambleWord(currentWordObj.word);
+            document.getElementById("guess").value = "";
+            document.getElementById("result").innerText = "";
+            document.getElementById("characterImg").style.display = "none";
+        }
+
+        function scrambleWord(word) {
+            let scrambled = word.split("");
+            for(let i = scrambled.length - 1; i > 0; i--){
+                const randomIndex = Math.floor(Math.random() * (i + 1));
+                [scrambled[i], scrambled[randomIndex]] = [scrambled[randomIndex], scrambled[i]];
+            }
+            return scrambled.join("");
+        }
+
+        function checkAnswer() {
+            const userGuess = document.getElementById("guess").value;
+            const resultDiv = document.getElementById("result");
+            const imgEl = document.getElementById("characterImg");
+
+            if(userGuess.toLowerCase() === currentWordObj.word.toLowerCase()){
+                resultDiv.innerText = "Correct!";
+                resultDiv.style.color = "green";
+                imgEl.src = currentWordObj.img;
+                imgEl.style.display = "block";
+            } else {
+                resultDiv.innerText = "Wrong, try again!";
+                resultDiv.style.color = "red";
+                imgEl.style.display = "none";
+            }
+        }
+
+        document.getElementById("checkAnswer").addEventListener("click", checkAnswer);
+        document.getElementById("newWord").addEventListener("click", newWord);
+
+        window.onload = newWord;
+    </script>
+</body>
+</html>
